@@ -7,45 +7,22 @@ class PostIt extends Component {
         super();
     }
 
-    handleOnBlurTitle = async (ev) => {
-        let content = ev.target.innerText;
-        if (content == '') {
-            content = 'New Post It';
-            ev.target.innerText = content;
-        }
-        try {
-            const response = await axios.patch(`/post_it/${this.props.id}/`, {title: content.trim()});
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    handleOnFocusTitle = ev => {
-        if (ev.target.innerText == 'New Post It') {
-            ev.target.innerText = "";
-        }
-    }
-
     handleOnBlurDescription = async (ev) => {
         const content = ev.target.innerText;
-        try {
-            const response = await axios.patch(`/post_it/${this.props.id}/`, {description: content.trim()});
-        } catch (err) {
-            console.log(err);
-        }
+        this.props.onBlur(this.props.id, content.trim());
     }
+
     render() {
-        const {title, description} = this.props;
+        const { description } = this.props;
         return (
-            <div className="card text-white bg-primary mb-3">
-                <div
-                    className="card-header"
-                    contentEditable="true"
-                    onBlur={this.handleOnBlurTitle}
-                    onFocus={this.handleOnFocusTitle}
-                >{ title }</div>
-                <div className="card-body">
-                    <p className="card-text post_it_edit" contentEditable="true" onBlur={this.handleOnBlurDescription}>{description}</p>
+            <div className="col-md-4" style={{padding: '10px'}}>
+                <div className="card text-white bg-primary">
+                    <div className="card-header">
+                        <button onClick={() => this.props.onClick(this.props.id)} className="btn btn-primary pull-right">x</button>
+                    </div>
+                    <div className="card-body">
+                        <p className="card-text post_it_edit" contentEditable="true" onBlur={this.handleOnBlurDescription}>{description}</p>
+                    </div>
                 </div>
             </div>
         )

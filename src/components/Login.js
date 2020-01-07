@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
+import LoginService from '../services/LoginService';
 class Login extends Component {
 
     constructor() {
@@ -20,15 +20,10 @@ class Login extends Component {
 
     handleSubmit = async (ev) => {
         ev.preventDefault();
-        try {
-            const response = await axios.post('/token/', this.state);
-            localStorage.setItem('token', response.data.access);
-            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
-            this.setState({isAuth: true});
-        } catch (err) {
-            alert('error');
-        }
         
+        if (await LoginService.sign(this.state)) {
+            this.setState({isAuth: true});
+        }
     }
     render() {
         if (this.state.isAuth) {

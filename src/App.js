@@ -5,20 +5,19 @@ import Dashboard from './components/Dashboard';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
+import Navbar from './components/Navbar';
+import LoginService from './services/LoginService';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 
-const token = localStorage.getItem('token');
-if (token) {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-}
 
 class App extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div className="container-block">
         <Router>
+          {LoginService.isAuth() ? <Navbar /> : ''}
           <ProtectedRoute path="/" component={Dashboard} exact />
           <Route path="/login" component={Login} exact />
         </Router>
